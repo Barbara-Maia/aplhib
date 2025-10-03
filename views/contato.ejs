@@ -1,0 +1,84 @@
+<div class="card">
+    <h2>📞 Contato</h2>
+    <p><%= description %></p>
+</div>
+
+<div class="card">
+    <h3>📧 Informações de Contato</h3>
+    <div style="margin-top: 20px;">
+        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; margin: 10px 0;">
+            <h4 style="color: #60a5fa; margin: 0 0 10px 0;">📧 Email</h4>
+            <p style="margin: 0; font-size: 1.1rem;"><%= contactInfo.email %></p>
+        </div>
+        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; margin: 10px 0;">
+            <h4 style="color: #60a5fa; margin: 0 0 10px 0;">📱 Telefone</h4>
+            <p style="margin: 0; font-size: 1.1rem;"><%= contactInfo.telefone %></p>
+        </div>
+        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; margin: 10px 0;">
+            <h4 style="color: #60a5fa; margin: 0 0 10px 0;">🏢 Endereço</h4>
+            <p style="margin: 0; font-size: 1.1rem;"><%= contactInfo.endereco %></p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>💬 Formulário de Contato</h3>
+    <form id="contactForm" style="margin-top: 20px;">
+        <div style="margin-bottom: 20px;">
+            <label for="nome" style="display: block; margin-bottom: 5px; font-weight: bold;">Nome:</label>
+            <input type="text" id="nome" name="nome" required 
+                   style="width: 100%; padding: 12px; border: none; border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: white; font-size: 1rem;">
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label for="email" style="display: block; margin-bottom: 5px; font-weight: bold;">Email:</label>
+            <input type="email" id="email" name="email" required 
+                   style="width: 100%; padding: 12px; border: none; border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: white; font-size: 1rem;">
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label for="assunto" style="display: block; margin-bottom: 5px; font-weight: bold;">Assunto:</label>
+            <input type="text" id="assunto" name="assunto" required 
+                   style="width: 100%; padding: 12px; border: none; border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: white; font-size: 1rem;">
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label for="mensagem" style="display: block; margin-bottom: 5px; font-weight: bold;">Mensagem:</label>
+            <textarea id="mensagem" name="mensagem" rows="5" required 
+                      style="width: 100%; padding: 12px; border: none; border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: white; font-size: 1rem; resize: vertical;"></textarea>
+        </div>
+        <button type="submit" class="btn">📤 Enviar Mensagem</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>🕒 Horário de Atendimento</h3>
+    <div style="margin-top: 20px;">
+        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; margin: 10px 0;">
+            <h4 style="color: #4ade80; margin: 0 0 10px 0;">📅 Segunda a Sexta</h4>
+            <p style="margin: 0; font-size: 1.1rem;">08:00 - 18:00</p>
+        </div>
+        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; margin: 10px 0;">
+            <h4 style="color: #fbbf24; margin: 0 0 10px 0;">📅 Sábado</h4>
+            <p style="margin: 0; font-size: 1.1rem;">09:00 - 12:00</p>
+        </div>
+        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; margin: 10px 0;">
+            <h4 style="color: #f87171; margin: 0 0 10px 0;">📅 Domingo</h4>
+            <p style="margin: 0; font-size: 1.1rem;">Fechado</p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData);
+    
+    // Simula envio do formulário
+    alert('Mensagem enviada com sucesso!\\n\\nDados:\\n' + JSON.stringify(data, null, 2));
+    
+    // Limpa o formulário
+    this.reset();
+});
+</script>
+
+

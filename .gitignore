@@ -1,0 +1,42 @@
+# Pasta do Ambiente Virtual
+venv/
+.venv/
+env/
+.env/
+
+# Arquivos de Banco de Dados
+*.sqlite3
+db.sqlite3
+
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos de IDE e editores
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Arquivos de dependências (gerados pelo pip)
+*.egg-info/
+dist/
+build/
+
+# Arquivos de mídia e estáticos coletados
+# (Opcional, mas recomendado não versionar os arquivos coletados)
+/media/
+/static_root/
+/staticfiles/
+
+# Logs
+*.log
+
+# Arquivos de configuração local (para segredos)
+local_settings.py
+.env
+
+# Dependências do Node.js
+node_modules

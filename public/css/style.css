@@ -1,0 +1,913 @@
+/* ============================================================================ */
+/* 🎨 ESTILOS GLOBAIS E LAYOUT (Glassmorphism) */
+/* ============================================================================ */
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.8);
+    --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.4);
+    
+    /* Variáveis do Tema de Tarefas */
+    --bg-color: #483D8B;
+    --container-color: #6A5ACD;
+    --card-color: #7B68EE;
+    --card-hover-color: #8A2BE2;
+    --text-color: #FFFFFF;
+    --text-muted-color: #E6E6FA;
+    --priority-alta: #FF4136;
+    --priority-media: #FFDC00;
+    --priority-baixa: #2ECC40;
+    --completed-color: #A9A9A9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--primary-gradient);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-20px, 20px) rotate(240deg); }
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: var(--glass-bg);
+    padding: 0;
+    border-radius: 24px;
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-heavy);
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+    position: relative;
+}
+
+.header {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
+    padding: 60px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.header h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.header p {
+    font-size: 1.3rem;
+    font-weight: 400;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+}
+
+.nav {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 24px 40px;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.nav a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 12px 24px;
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* --- CORREÇÃO ADICIONADA --- */
+    display: inline-flex; /* Garante que a área clicável se ajuste ao conteúdo */
+    align-items: center; /* Alinha o ícone e o texto verticalmente */
+    gap: 0.5em; /* Adiciona um espaço entre o ícone e o texto */
+}
+
+.nav a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.content {
+    padding: 40px;
+    min-height: 60vh;
+}
+
+.footer {
+    background: rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 32px 40px;
+    border-top: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+}
+
+.footer p {
+    opacity: 0.8;
+    font-weight: 400;
+}
+
+.card {
+    background: var(--glass-bg);
+    padding: 32px;
+    border-radius: 20px;
+    margin: 24px 0;
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-light);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
+}
+
+.card h2, .card h3 {
+    margin-bottom: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.list-item {
+    padding: 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+}
+
+.status-online {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+}
+
+.status-offline {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+/* ============================================================================ */
+/* 🏠 ESTILOS DA PÁGINA INICIAL (index.ejs) */
+/* ============================================================================ */
+.info-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 16px;
+}
+.info-header .rocket {
+    font-size: 3rem;
+    animation: rocket-fly 4s ease-in-out infinite;
+}
+@keyframes rocket-fly {
+    0%, 100% { transform: translateY(0) rotate(-45deg); }
+    50% { transform: translateY(-15px) rotate(-45deg); }
+}
+.info-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 10px;
+}
+.version-info {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+.version-info > div {
+    text-align: center;
+}
+.version-info .value {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+.version-info .label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+}
+.tech-card {
+    background-color: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 1px solid var(--glass-border);
+}
+.tech-card:hover {
+    transform: translateY(-5px);
+    background-color: rgba(255,255,255,0.1);
+}
+.grid-item {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.grid-item:hover {
+    background: rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+.grid-item a {
+    color: #60a5fa;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* ============================================================================ */
+/* 📋 ESTILOS DA PÁGINA DE TAREFAS (tarefas.ejs) */
+/* ============================================================================ */
+
+/* Header com botões de ação */
+.task-container-header {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.task-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--container-color);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; 
+    gap: 1rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.task-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--text-color);
+}
+
+.task-counter-container {
+    display: flex;
+    gap: 1rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.add-task-btn, .dashboard-btn {
+    display: block;
+    flex-grow: 1; /* Faz os botões dividirem o espaço */
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--text-color);
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-task-btn {
+    background-color: var(--card-hover-color);
+}
+.add-task-btn:hover {
+    background-color: #9932CC;
+}
+
+.dashboard-btn {
+    background-color: #5a67d8; /* Um tom de índigo */
+}
+.dashboard-btn:hover {
+    background-color: #4c51bf;
+}
+
+
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.task-card {
+    background-color: var(--card-color);
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.task-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    background-color: var(--card-hover-color);
+}
+
+.task-card.completed {
+    background-color: var(--completed-color);
+    opacity: 0.7;
+}
+
+.task-card.completed .task-content h3,
+.task-card.completed .task-content p {
+    text-decoration: line-through;
+    color: #333;
+}
+
+.task-checkbox {
+    margin-right: 1.5rem;
+    min-width: 20px;
+    min-height: 20px;
+    cursor: pointer;
+}
+
+.task-content { flex-grow: 1; }
+.task-content h3 { margin: 0 0 0.25rem 0; font-size: 1.2rem; }
+.task-content p { margin: 0; color: var(--text-muted-color); font-size: 0.9rem; }
+.task-meta { display: flex; align-items: center; }
+
+.priority-tag {
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #fff;
+    margin-right: 1rem;
+}
+
+.priority-alta { background-color: var(--priority-alta); }
+.priority-media { background-color: var(--priority-media); color: #333; }
+.priority-baixa { background-color: var(--priority-baixa); }
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted-color);
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.delete-btn:hover { color: var(--priority-alta); }
+
+/* =================== CÓDIGO PARA SUBSTITUIR =================== */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+    background-color: var(--container-color);
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: 15px;
+    max-width: 500px;
+    position: relative;
+    animation: fadeIn 0.5s;
+    z-index: 1001;
+}
+
+.close-btn {
+    color: var(--text-muted-color);
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+.modal-content h3 { margin-top: 0; font-size: 1.5rem; }
+.modal-content .form-group { margin-bottom: 1rem; }
+.modal-content label { display: block; margin-bottom: 0.5rem; }
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: 1px solid var(--bg-color);
+    background-color: var(--card-color);
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.modal-content button[type="submit"] {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--card-hover-color);
+    border: none;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content button[type="submit"]:hover {
+    background-color: #9932CC;
+}
+
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.modal-buttons button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+#cancel-delete-btn {
+    background-color: var(--priority-baixa);
+}
+#cancel-delete-btn:hover {
+    opacity: 0.8;
+}
+
+.btn-confirm-delete {
+    background-color: var(--priority-alta);
+}
+.btn-confirm-delete:hover {
+    opacity: 0.8;
+}
+/* Ajusta o conteúdo principal da tarefa para layout de coluna */
+.task-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Deixa o título clicável */
+.task-title {
+    cursor: pointer;
+    position: relative;
+    padding-right: 20px; /* Espaço para o ícone de seta */
+    transition: color 0.2s ease-in-out;
+}
+.task-title:hover {
+    color: var(--text-muted-color); /* Clareia um pouco no hover */
+}
+
+/* Adiciona um ícone de seta no título */
+.task-title::after {
+    content: '▼';
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    font-size: 0.7em;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Gira a seta quando a tarefa está aberta */
+.task-card.is-open .task-title::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Esconde a descrição por padrão com uma animação suave */
+.task-description {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Adiciona transição ao padding */
+    margin-top: 0;
+    padding: 0 0 0 5px; /* Ajusta o padding inicial */
+    color: var(--text-muted-color);
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    line-height: 1.5;
+}
+
+/* Mostra a descrição quando a tarefa está aberta */
+.task-card.is-open .task-description {
+    max-height: 150px; 
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.5rem 0.5rem 10px; /* Adiciona padding interno */
+    
+    /* Novas propriedades para alinhar os itens */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Mostra a data e hora que a tarefa foi criada */
+.task-creation-date {
+    font-size: 0.85em;    
+    opacity: 0.8;         
+    margin-top: 1rem;       
+    align-self: flex-start; 
+}
+
+
+/* ============================================================================ */
+/* 📊 ESTILOS DA PÁGINA DE DASHBOARD (dashboard.ejs) */
+/* ============================================================================ */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: rgba(0,0,0,0.15);
+    padding: 1.5rem;
+    border-radius: 16px;
+    text-align: center;
+    border: 1px solid var(--glass-border);
+}
+
+.stat-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.progress-card {
+    background: rgba(0,0,0,0.15);
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    margin: 2rem 0;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 20px;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--success-gradient);
+    border-radius: 10px;
+    transition: width 0.5s ease-in-out;
+}
+
+.latest-tasks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.latest-task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.latest-task-item:last-child {
+    border-bottom: none;
+}
+
+.latest-task-item.completed .task-title {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.task-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.task-status.completed {
+    background-color: rgba(74, 222, 128, 0.2);
+    color: #4ade80;
+}
+
+.task-status.pending {
+    background-color: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+}
+
+.btn-back {
+    display: inline-block;
+    margin-top: 2rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    transition: background 0.3s ease;
+}
+
+.btn-back:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================================================ */
+/* 🍔 ESTILOS DO MENU HAMBÚRGUER (RESPONSIVO) */
+/* ============================================================================ */
+
+/* Ícone do Menu (Hambúrguer) */
+.menu-toggle {
+    display: none; /* Escondido por padrão em telas grandes */
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1001;
+    transition: all 0.3s ease;
+}
+
+.menu-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+
+/* Painel do Menu Mobile */
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    left: -100%; /* Começa fora da tela */
+    width: 300px;
+    height: 100%;
+    background: var(--primary-gradient);
+    box-shadow: var(--shadow-heavy);
+    z-index: 1000;
+    padding: 60px 20px 20px 20px;
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-nav.open {
+    left: 0; /* Entra na tela */
+}
+
+.mobile-nav ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 2rem;
+}
+
+.mobile-nav ul li a {
+    display: block;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 1rem;
+    border-radius: 12px;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.mobile-nav ul li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.close-menu {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 2.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Media Query para ativar o menu hambúrguer */
+@media (max-width: 900px) {
+    .nav {
+        display: none; /* Esconde o menu horizontal */
+    }
+
+    .menu-toggle {
+        display: block; /* Mostra o botão hambúrguer */
+    }
+    
+    .header {
+        padding-top: 80px; /* Adiciona espaço para o botão não sobrepor o título */
+    }
+}
+
+
+/* ============================================================================ */
+/* 🔐 ESTILOS DAS PÁGINAS DE AUTENTICAÇÃO (login.ejs, cadastro.ejs) */
+/* ============================================================================ */
+
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    padding: 2rem 1rem;
+}
+
+.auth-card {
+    background: var(--glass-bg);
+    padding: 2.5rem;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-medium);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.auth-card h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.auth-card p {
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+}
+
+.auth-card .form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.auth-card label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.auth-card input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--glass-border);
+    background-color: rgba(0, 0, 0, 0.2);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.auth-card input:focus {
+    outline: none;
+    border-color: #a78bfa; /* Um roxo claro */
+    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.4);
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--text-color);
+    background: var(--primary-gradient);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.auth-switch {
+    margin-top: 1.5rem;
+}
+
+.auth-switch a {
+    color: #a78bfa;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Alertas de erro/sucesso */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+.alert-danger {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid #ef4444;
+}
+.alert-success {
+    background-color: rgba(74, 222, 128, 0.2);
+    color: #4ade80;
+    border: 1px solid #22c55e;
+}

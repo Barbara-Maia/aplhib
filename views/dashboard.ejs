@@ -1,0 +1,49 @@
+<div class="card">
+    <h2 style="font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">📊 Dashboard de Progresso</h2>
+
+    <!-- Grelha de Estatísticas -->
+    <div class="dashboard-grid">
+        <div class="stat-card">
+            <h3>Total de Tarefas</h3>
+            <p class="stat-number"><%= stats.total %></p>
+        </div>
+        <div class="stat-card">
+            <h3>✅ Concluídas</h3>
+            <p class="stat-number"><%= stats.concluidas %></p>
+        </div>
+        <div class="stat-card">
+            <h3>🕒 Pendentes</h3>
+            <p class="stat-number"><%= stats.pendentes %></p>
+        </div>
+    </div>
+
+    <!-- Barra de Progresso -->
+    <div class="progress-card">
+        <h3>Progresso Geral (<%= stats.percentual %>%)</h3>
+        <div class="progress-bar-container">
+            <div class="progress-bar" style="width: <%= stats.percentual %>%;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3><i class="fas fa-history"></i> Últimas 5 Tarefas Adicionadas</h3>
+    <ul class="latest-tasks-list">
+        <% if (latestTasks.length > 0) { %>
+            <% latestTasks.forEach(task => { %>
+                <li class="latest-task-item <%= task.concluida ? 'completed' : '' %>">
+                    <span class="task-title"><%= task.titulo %></span>
+                    <% if (task.concluida) { %>
+                        <span class="task-status completed">Concluída</span>
+                    <% } else { %>
+                        <span class="task-status pending">Pendente</span>
+                    <% } %>
+                </li>
+            <% }) %>
+        <% } else { %>
+            <p>Nenhuma tarefa recente para mostrar.</p>
+        <% } %>
+    </ul>
+</div>
+
+<a href="/tarefas" class="btn-back"> <i class="fas fa-arrow-left"></i> Voltar para a Lista de Tarefas</a>

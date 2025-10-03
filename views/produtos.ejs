@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="header">
+        <h1>🛍️ Nossos Produtos</h1>
+        <p><%= description %></p>
+    </div>
+
+    <div class="card">
+        <h3>Lista de Produtos</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+
+            <% if (produtos && produtos.length > 0) { %>
+                <% produtos.forEach(function(produto) { %>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <h4><%= produto.nome %></h4>
+                        <p><strong>Preço:</strong> R$ <%= produto.preco.toFixed(2) %></p>
+                        <p>
+                            <strong>Estoque:</strong>
+                            <span style="font-weight: bold; color: <%= produto.estoque > 0 ? '#4ade80' : '#f87171' %>">
+                                <%= produto.estoque > 0 ? produto.estoque + ' unidades' : 'Esgotado' %>
+                            </span>
+                        </p>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>Nenhum produto encontrado.</p>
+            <% } %>
+
+        </div>
+    </div>
+</div>

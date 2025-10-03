@@ -1,0 +1,29 @@
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>🚀 Acessar Conta</h2>
+        <p>Bem-vindo de volta! Insira suas credenciais.</p>
+
+        <% if (locals.error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+
+        <% if (locals.success_msg) { %>
+            <div class="alert alert-success"><%= success_msg %></div>
+        <% } %>
+        
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="auth-btn">Entrar</button>
+        </form>
+        <div class="auth-switch">
+            <p>Não tem uma conta? <a href="/cadastro">Cadastre-se</a></p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+<div class="card">
+    <h2>ℹ️ Sobre o Projeto</h2>
+    <p><%= description %></p>
+</div>
+
+<div class="card">
+    <h3>🎯 Características do Projeto</h3>
+    <ul style="list-style: none; padding: 0;">
+        <% features.forEach(function(feature) { %>
+        <li style="padding: 8px 0; display: flex; align-items: center; gap: 10px;">
+            <span style="color: #4ade80;">✅</span> <%= feature %>
+        </li>
+        <% }); %>
+    </ul>
+</div>
+
+<div class="card">
+    <h3>🛠️ Tecnologias Utilizadas</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+        <% technologies.forEach(function(tech) { %>
+        <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; text-align: center;">
+            <strong><%= tech %></strong>
+        </div>
+        <% }); %>
+    </div>
+</div>
+
+<div class="card">
+    <h3>📚 Objetivos de Aprendizado</h3>
+    <ul style="list-style: none; padding: 0;">
+        <li style="padding: 8px 0; display: flex; align-items: center; gap: 10px;">
+            <span style="color: #4ade80;">✅</span> Entender conceitos de aplicativos híbridos
+        </li>
+        <li style="padding: 8px 0; display: flex; align-items: center; gap: 10px;">
+            <span style="color: #4ade80;">✅</span> Configurar ambiente de desenvolvimento Node.js
+        </li>
+        <li style="padding: 8px 0; display: flex; align-items: center; gap: 10px;">
+            <span style="color: #4ade80;">✅</span> Criar servidor Express.js
+        </li>
+        <li style="padding: 8px 0; display: flex; align-items: center; gap: 10px;">
+            <span style="color: #4ade80;">✅</span> Implementar sistema de rotas
+        </li>
+        <li style="padding: 8px 0; display: flex; align-items: center; gap: 10px;">
+            <span style="color: #4ade80;">✅</span> Conectar com banco de dados (opcional)
+        </li>
+        <li style="padding: 8px 0; display: flex; align-items: center; gap: 10px;">
+            <span style="color: #4ade80;">✅</span> Criar API REST
+        </li>
+    </ul>
+</div>
+
+<div class="card">
+    <h3>🚀 Próximos Passos</h3>
+    <p>Na próxima aula, vamos:</p>
+    <ul style="list-style: none; padding: 0; margin-top: 15px;">
+        <li style="padding: 8px 0; display: flex; align-items: center; gap: 10px;">
+            <span style="color: #fbbf24;">🔄</span> Implementar autenticação de usuários
+        </li>
+        <li style="padding: 8px 0; display: flex; align-items: center; gap: 10px;">
+            <span style="color: #fbbf24;">🔄</span> Criar sistema de CRUD completo
+        </li>
+        <li style="padding: 8px 0; display: flex; align-items: center; gap: 10px;">
+            <span style="color: #fbbf24;">🔄</span> Adicionar validação de dados
+        </li>
+        <li style="padding: 8px 0; display: flex; align-items: center; gap: 10px;">
+            <span style="color: #fbbf24;">🔄</span> Implementar testes automatizados
+        </li>
+    </ul>
+</div>
+
+

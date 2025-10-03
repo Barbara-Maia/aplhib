@@ -1,0 +1,88 @@
+<%# Conteúdo da Página %>
+<div class="info-header">
+    <div class="rocket">🚀</div>
+    <h2>Bem-vindo ao Aplicativo Híbrido!</h2>
+    <p><%= description %></p>
+
+    <div class="version-info">
+        <div>
+            <div class="value" style="color: #4ade80;">v<%= version %></div>
+            <div class="label">Versão</div>
+        </div>
+        <div>
+            <div class="value" style="color: #60a5fa;"><%= currentTime.split(' ')[0] %></div>
+            <div class="label">Última atualização</div>
+        </div>
+    </div>
+</div>
+
+<div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+    <div class="card">
+        <h3><i class="fas fa-server"></i> Status do Sistema</h3>
+        <p class="list-item">Servidor: <span class="status-online" style="padding: 2px 6px; border-radius: 6px;">Online</span></p>
+    </div>
+    <div class="card">
+        <h3><i class="fas fa-database"></i> Banco de Dados</h3>
+        <% if (dbStatus && dbStatus.status === 'Conectado') { %>
+            <p class="list-item">Status: <span class="status-online" style="padding: 2px 6px; border-radius: 6px;">Conectado</span></p>
+        <% } else { %>
+            <p class="list-item">Status: <span class="status-offline" style="padding: 2px 6px; border-radius: 6px;">Modo Offline</span></p>
+        <% } %>
+    </div>
+    <div class="card">
+        <h3><i class="fas fa-network-wired"></i> API REST</h3>
+        <p class="list-item">Status: <span class="status-online" style="padding: 2px 6px; border-radius: 6px;">Online</span></p>
+    </div>
+</div>
+
+<div class="card">
+    <h3><i class="fas fa-bullseye"></i> Objetivos da Aula 1</h3>
+    <ul class="list-group">
+        <li class="list-item"><i class="fas fa-check-circle"></i> Configurar ambiente de desenvolvimento</li>
+        <li class="list-item"><i class="fas fa-check-circle"></i> Entender conceitos de aplicativos híbridos</li>
+        <li class="list-item"><i class="fas fa-check-circle"></i> Criar estrutura básica do projeto</li>
+        <li class="list-item"><i class="fas fa-check-circle"></i> Implementar API REST (endpoints)</li>
+        <li class="list-item"><i class="fas fa-check-circle"></i> Criar sistema de rotas</li>
+    </ul>
+</div>
+
+<div class="grid" style="grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div class="card">
+        <h3><i class="fas fa-route"></i> Rotas Disponíveis</h3>
+        <div class="grid-item">
+            <a href="/sobre">Sobre o Projeto</a>
+            <p>Informações detalhadas sobre o projeto e suas funcionalidades</p>
+        </div>
+         <div class="grid-item">
+            <a href="/tarefas">Gerenciar Tarefas</a>
+            <p>Sistema completo de gerenciamento de tarefas</p>
+        </div>
+         <div class="grid-item">
+            <a href="/contato">Contato</a>
+            <p>Informações de contato e suporte</p>
+        </div>
+    </div>
+    <div class="card">
+        <h3><i class="fas fa-vial"></i> Teste da API</h3>
+         <div class="grid-item">
+            <a href="/api/status" target="_blank">API Status</a>
+            <p>Status da API em formato JSON</p>
+        </div>
+        <div class="grid-item">
+            <a href="/api/tarefas" target="_blank">Ver Tarefas da API</a>
+            <p>Lista todas as tarefas diretamente da API</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3><i class="fas fa-cogs"></i> Tecnologias Utilizadas</h3>
+    <div class="tech-grid">
+        <div class="tech-card">Node.js</div>
+        <div class="tech-card">Express.js</div>
+        <div class="tech-card">MongoDB</div>
+        <div class="tech-card">EJS</div>
+    </div>
+</div>
+</div>
+

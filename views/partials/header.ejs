@@ -1,0 +1,121 @@
+<style>
+    /* Estilos específicos para o header e nav, movidos para cá para organização */
+    .header {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
+        padding: 60px 40px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .header::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+        animation: shimmer 3s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    .header h1 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 800;
+        margin-bottom: 16px;
+        background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        position: relative; z-index: 1;
+    }
+    .header p {
+        font-size: 1.3rem;
+        font-weight: 400;
+        opacity: 0.9;
+        position: relative; z-index: 1;
+    }
+    .nav {
+        background: rgba(0, 0, 0, 0.1);
+        padding: 24px 40px;
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--glass-border);
+    }
+    .nav ul {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .nav a {
+        color: var(--text-primary);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 12px 24px;
+        border-radius: 16px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .nav a::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    .nav a:hover::before { left: 100%; }
+    .nav a:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+    @media (max-width: 768px) {
+        .header { padding: 40px 20px; }
+        .nav { padding: 20px; }
+        .nav ul { gap: 4px; }
+        .nav a { padding: 10px 16px; font-size: 0.9rem; }
+    }
+    @media (max-width: 480px) {
+        .nav ul { flex-direction: column; align-items: center; }
+        .nav a { width: 100%; text-align: center; margin: 2px 0; }
+    }
+</style>
+
+<div class="header">
+    <button class="menu-toggle" id="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <h1>🚀 Aplicativo Híbrido</h1>
+    <p><%= description %></p>
+</div>
+
+<nav class="nav" id="desktop-nav">
+    <ul>
+        <li><a href="/"><i class="fas fa-home fa-fw"></i> Início</a></li>
+        <li><a href="/sobre"><i class="fas fa-info-circle fa-fw"></i> Sobre</a></li>
+        <li><a href="/tarefas"><i class="fas fa-tasks fa-fw"></i> Tarefas</a></li>
+        <li><a href="/contato"><i class="fas fa-envelope fa-fw"></i> Contato</a></li>
+        <li><a href="/api/status" target="_blank"><i class="fas fa-chart-line fa-fw"></i> API Status</a></li>
+    </ul>
+</nav>
+
+<!-- Navegação Mobile -->
+<div class="mobile-nav" id="mobile-nav">
+    <button class="close-menu" id="close-menu">&times;</button>
+    <ul>
+        <li><a href="/"><i class="fas fa-home fa-fw"></i> Início</a></li>
+        <li><a href="/sobre"><i class="fas fa-info-circle fa-fw"></i> Sobre</a></li>
+        <li><a href="/tarefas"><i class="fas fa-tasks fa-fw"></i> Tarefas</a></li>
+        <li><a href="/contato"><i class="fas fa-envelope fa-fw"></i> Contato</a></li>
+        <li><a href="/api/status" target="_blank"><i class="fas fa-chart-line fa-fw"></i> API Status</a></li>
+    </ul>
+</div>
+
+
