@@ -9,6 +9,7 @@
 const express = require('express');
 const router = express.Router();
 const Task = require('../models/task'); // Importa o modelo de Tarefa
+const { isAuthenticated } = require('../middleware/authMiddleware');
 
 /**
  * STATUS DA API
@@ -55,17 +56,19 @@ router.get('/tarefas', async (req, res) => {
  * Rota: POST /api/tarefas
  * Descrição: Cria uma nova tarefa no banco de dados.
  */
-router.post('/tarefas', async (req, res) => {
-    console.log('➕ Criando nova tarefa no banco de dados...');
+router.post('/tarefas', isAuthenticated, async (req, res) => {
     try {
-        // Task.create usa o req.body inteiro, e o Mongoose Schema valida os dados.
-        // Se 'titulo' faltar, o Mongoose gerará um erro que será capturado pelo catch.
-        const newTask = await Task.create(req.body);
+        const { titulo, descricao, prioridade } = req.body;
+        const newTask = new Task({
+            titulo,
+            descricao,
+            prioridade,
+            user: req.session.userId // <-- VINCULA A NOVA TAREFA AO USUÁRIO LOGADO
+        });
+        await newTask.save();
         res.status(201).json({ success: true, data: newTask });
     } catch (error) {
-        // Erros de validação do Mongoose geralmente resultam em status 400.
-        console.error("Erro ao criar tarefa:", error);
-        res.status(400).json({ success: false, message: 'Dados inválidos. Verifique os campos enviados.', error: error.message });
+        res.status(400).json({ success: false, message: error.message });
     }
 });
 
@@ -75,23 +78,18 @@ router.post('/tarefas', async (req, res) => {
  * Rota: PUT /api/tarefas/:id
  * Descrição: Atualiza uma tarefa existente no banco de dados.
  */
-router.put('/tarefas/:id', async (req, res) => {
-    console.log(`🔄 Atualizando tarefa ${req.params.id}...`);
+router.put('/tarefas/:id', isAuthenticated, async (req, res) => {
     try {
-        const updatedTask = await Task.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true, runValidators: true } // {new: true} retorna o documento atualizado
-        );
-
-        if (!updatedTask) {
-            return res.status(404).json({ success: false, message: 'Tarefa não encontrada' });
+        const task = await Task.findOne({ _id: req.params.id, user: req.session.userId });
+        if (!task) {
+            return res.status(404).json({ success: false, message: 'Tarefa não encontrada ou não pertence a você.' });
         }
-
-        res.json({ success: true, data: updatedTask });
-    } catch (error) {
-        console.error("Erro ao atualizar tarefa:", error);
-        res.status(400).json({ success: false, message: 'Erro ao atualizar a tarefa.', error: error.message });
+        // Atualiza apenas os campos enviados no corpo da requisição
+        Object.assign(task, req.body);
+        await task.save();
+        res.json({ success: true, data: task });
+    } catch(error) {
+        res.status(400).json({ success: false, message: error.message });
     }
 });
 
@@ -101,19 +99,15 @@ router.put('/tarefas/:id', async (req, res) => {
  * Rota: DELETE /api/tarefas/:id
  * Descrição: Deleta uma tarefa do banco de dados.
  */
-router.delete('/tarefas/:id', async (req, res) => {
-    console.log(`🗑️ Deletando tarefa ${req.params.id}...`);
+router.delete('/tarefas/:id', isAuthenticated, async (req, res) => {
     try {
-        const deletedTask = await Task.findByIdAndDelete(req.params.id);
-
-        if (!deletedTask) {
-            return res.status(404).json({ success: false, message: 'Tarefa não encontrada' });
+        const task = await Task.findOneAndDelete({ _id: req.params.id, user: req.session.userId });
+        if (!task) {
+            return res.status(404).json({ success: false, message: 'Tarefa não encontrada ou não pertence a você.' });
         }
-
-        res.json({ success: true, message: `Tarefa deletada com sucesso!`, data: {} });
-    } catch (error) {
-        console.error("Erro ao deletar tarefa:", error);
-        res.status(500).json({ success: false, message: 'Erro no servidor ao deletar a tarefa.' });
+        res.json({ success: true, message: 'Tarefa excluída com sucesso.' });
+    } catch(error) {
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 

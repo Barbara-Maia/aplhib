@@ -96,6 +96,15 @@
     <p><%= description %></p>
 </div>
 
+<!--------------- Navegação Desktop ----------------->
+<div class="header">
+    <button class="menu-toggle" id="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <h1>🚀 Aplicativo Híbrido</h1>
+    <p><%= description %></p>
+</div>
+
 <nav class="nav" id="desktop-nav">
     <ul>
         <li><a href="/"><i class="fas fa-home fa-fw"></i> Início</a></li>
@@ -103,10 +112,23 @@
         <li><a href="/tarefas"><i class="fas fa-tasks fa-fw"></i> Tarefas</a></li>
         <li><a href="/contato"><i class="fas fa-envelope fa-fw"></i> Contato</a></li>
         <li><a href="/api/status" target="_blank"><i class="fas fa-chart-line fa-fw"></i> API Status</a></li>
+        
+        <% if (locals.userIsLoggedIn) { %>
+            <li>
+                <form action="/logout" method="POST" style="display: inline;">
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt fa-fw"></i> Logout
+                    </button>
+                </form>
+            </li>
+        <% } else { %>
+            <li><a href="/login"><i class="fas fa-sign-in-alt fa-fw"></i> Login</a></li>
+        <% } %>
     </ul>
 </nav>
 
-<!-- Navegação Mobile -->
+<!--------------- Navegação Mobile ----------------->
+
 <div class="mobile-nav" id="mobile-nav">
     <button class="close-menu" id="close-menu">&times;</button>
     <ul>
@@ -115,7 +137,17 @@
         <li><a href="/tarefas"><i class="fas fa-tasks fa-fw"></i> Tarefas</a></li>
         <li><a href="/contato"><i class="fas fa-envelope fa-fw"></i> Contato</a></li>
         <li><a href="/api/status" target="_blank"><i class="fas fa-chart-line fa-fw"></i> API Status</a></li>
+        
+        <% if (locals.userIsLoggedIn) { %>
+            <li>
+                <form action="/logout" method="POST" style="display: block; width: 100%;">
+                    <button type="submit" class="logout-btn-mobile">
+                        <i class="fas fa-sign-out-alt fa-fw"></i> Logout
+                    </button>
+                </form>
+            </li>
+        <% } else { %>
+            <li><a href="/login"><i class="fas fa-sign-in-alt fa-fw"></i> Login</a></li>
+        <% } %>
     </ul>
 </div>
-
-

@@ -31,6 +31,13 @@ const taskSchema = new mongoose.Schema({
         default: 'Média' // Valor padrão
     }
 }, {
+    
+    user: {
+        type: mongoose.Schema.Types.ObjectId, // Armazena o ID de um usuário
+        ref: 'User',                          // Refere-se ao modelo 'User'
+        required: true                        // Toda tarefa deve ter um dono
+    }
+}, {
     timestamps: true // Adiciona automaticamente os campos `createdAt` e `updatedAt`
 });
 

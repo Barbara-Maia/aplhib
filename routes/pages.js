@@ -9,6 +9,8 @@ const express = require('express');
 const router = express.Router();
 const Task = require('../models/task');
 const { getConnectionStatus } = require('../config/database'); // Importa a função de status
+const mongoose = require('mongoose');
+const { isAuthenticated } = require('../middleware/authMiddleware');
 
 /**
  * PÁGINA INICIAL (com dados do DB)
@@ -107,11 +109,15 @@ router.get('/contato', (req, res) => {
  * 2. Prioridade (Alta > Média > Baixa)
  * 3. Data de criação (mais recentes primeiro)
  */
-router.get('/tarefas', async (req, res) => {
+router.get('/tarefas', isAuthenticated, async (req, res) => { // <-- 2. APLIQUE O "SEGURANÇA" AQUI
     try {
         console.log('📋 Acessando página de tarefas (com ordenação aprimorada)...');
         
+         // 3. ATUALIZE A CONSULTA PARA BUSCAR APENAS AS TAREFAS DO USUÁRIO LOGADO
         const tasks = await Task.aggregate([
+            // Encontra apenas os documentos onde o campo 'user' é igual ao ID do usuário na sessão
+            { $match: { user: new mongoose.Types.ObjectId(req.session.userId) } },
+            
             // Etapa 1: Adicionar um campo numérico para a prioridade para podermos ordenar corretamente.
             {
                 $addFields: {
