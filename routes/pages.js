@@ -8,7 +8,7 @@
 const express = require('express');
 const router = express.Router();
 const Task = require('../models/task');
-const { getConnectionStatus } = require('../config/database'); // Importa a função de status
+const { getConnectionStatus } = require('../config/database');
 const mongoose = require('mongoose');
 const { isAuthenticated } = require('../middleware/authMiddleware');
 
@@ -101,24 +101,34 @@ router.get('/contato', (req, res) => {
 
 
 /**
- * PÁGINA DE TAREFAS (COM ORDENAÇÃO CORRETA)
+ * PÁGINA DE TAREFAS (LÓGICA COLABORATIVA)
  * =========================================
  * Rota: GET /tarefas
- * Descrição: Busca as tarefas do banco e as ordena por:
- * 1. Status (pendentes primeiro)
- * 2. Prioridade (Alta > Média > Baixa)
- * 3. Data de criação (mais recentes primeiro)
+ * Descrição: Busca as tarefas do banco de dados
  */
-router.get('/tarefas', isAuthenticated, async (req, res) => { // <-- 2. APLIQUE O "SEGURANÇA" AQUI
+router.get('/tarefas', isAuthenticated, async (req, res) => {
     try {
-        console.log('📋 Acessando página de tarefas (com ordenação aprimorada)...');
-        
-         // 3. ATUALIZE A CONSULTA PARA BUSCAR APENAS AS TAREFAS DO USUÁRIO LOGADO
         const tasks = await Task.aggregate([
-            // Encontra apenas os documentos onde o campo 'user' é igual ao ID do usuário na sessão
-            { $match: { user: new mongoose.Types.ObjectId(req.session.userId) } },
+            // ETAPA 1: Juntar (lookup) com a coleção de usuários
+            {
+                $lookup: {
+                    from: 'users', // A coleção que queremos "juntar"
+                    localField: 'user', // O campo em 'tasks' que guarda a referência
+                    foreignField: '_id', // O campo em 'users' que corresponde à referência
+                    as: 'userDetails' // O nome do novo array que conterá os dados do usuário
+                }
+            },
+            // ETAPA 2: O lookup retorna um array, vamos "desconstruí-lo" para ter um objeto único
+            {
+                $unwind: '$userDetails'
+            },
+            // ETAPA 3: Renomear o campo para algo mais simples (opcional, mas bom)
+            {
+                $addFields: {
+                    user: '$userDetails'
+                }
+            },
             
-            // Etapa 1: Adicionar um campo numérico para a prioridade para podermos ordenar corretamente.
             {
                 $addFields: {
                     priorityOrder: {
@@ -128,37 +138,30 @@ router.get('/tarefas', isAuthenticated, async (req, res) => { // <-- 2. APLIQUE 
                                 { case: { $eq: ["$prioridade", "Média"] }, then: 2 },
                                 { case: { $eq: ["$prioridade", "Baixa"] }, then: 1 }
                             ],
-                            default: 2 // Se a prioridade for nula ou diferente, assume como Média.
+                            default: 2
                         }
                     }
                 }
             },
-            // Etapa 2: Ordenar pelos critérios na ordem correta.
             {
                 $sort: {
-                    concluida: 1,      // Tarefas não concluídas (false = 0) vêm antes das concluídas (true = 1).
-                    priorityOrder: -1, // Ordena pela prioridade (3, 2, 1). O -1 significa ordem decrescente.
-                    createdAt: -1      // Usa a data de criação como critério de desempate.
+                    concluida: 1,
+                    priorityOrder: -1,
+                    createdAt: -1
                 }
             }
         ]);
 
-        const pageData = {
-            title: 'Gerenciador de Tarefas',
-            description: 'Gerencie suas tarefas de forma simples e eficiente.',
-            tasks: tasks
-        };
-        
-        res.render('tarefas', pageData);
+        res.render('tarefas', {
+            title: 'Todas as Tarefas', // Título atualizado
+            description: 'Acompanhe todas as tarefas da equipe.',
+            tasks: tasks,
+            layout: 'layout'
+        });
 
     } catch (error) {
-        console.error("Erro ao buscar e ordenar tarefas:", error);
-        res.status(500).render('tarefas', { 
-            title: 'Erro no Servidor',
-            description: 'Não foi possível carregar as tarefas no momento.',
-            tasks: [], 
-            error: "Não foi possível carregar as tarefas." 
-        });
+        console.error("Erro ao buscar tarefas:", error);
+        res.status(500).render('500', { title: 'Erro de Servidor' });
     }
 });
 

@@ -10,10 +10,11 @@ const mongoose = require('mongoose');
 
 // Definição do Schema da Tarefa
 const taskSchema = new mongoose.Schema({
+    // Todos os campos da tarefa devem estar juntos neste objeto
     titulo: {
         type: String,
-        required: [true, 'O título da tarefa é obrigatório.'], // Validação: campo obrigatório
-        trim: true, // Remove espaços em branco do início e do fim
+        required: [true, 'O título da tarefa é obrigatório.'],
+        trim: true,
         maxlength: [100, 'O título não pode ter mais de 100 caracteres.']
     },
     descricao: {
@@ -23,26 +24,24 @@ const taskSchema = new mongoose.Schema({
     },
     concluida: {
         type: Boolean,
-        default: false // Valor padrão: a tarefa começa como não concluída
+        default: false
     },
     prioridade: {
         type: String,
-        enum: ['Baixa', 'Média', 'Alta'], // Validação: só permite esses valores
-        default: 'Média' // Valor padrão
-    }
-}, {
-    
+        enum: ['Baixa', 'Média', 'Alta'],
+        default: 'Média'
+    },
+    // O campo 'user' precisa estar aqui dentro
     user: {
-        type: mongoose.Schema.Types.ObjectId, // Armazena o ID de um usuário
-        ref: 'User',                          // Refere-se ao modelo 'User'
-        required: true                        // Toda tarefa deve ter um dono
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 }, {
-    timestamps: true // Adiciona automaticamente os campos `createdAt` e `updatedAt`
+    // O segundo objeto é apenas para opções como timestamps
+    timestamps: true
 });
 
-// Cria o modelo 'Task' a partir do schema
 const Task = mongoose.model('Task', taskSchema);
 
-// Exporta o modelo compilado, que contém métodos como .find(), .create(), etc.
 module.exports = Task;

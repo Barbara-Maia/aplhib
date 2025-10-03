@@ -56,18 +56,27 @@ router.get('/tarefas', async (req, res) => {
  * Rota: POST /api/tarefas
  * Descrição: Cria uma nova tarefa no banco de dados.
  */
+// Rota para CRIAR uma nova tarefa
 router.post('/tarefas', isAuthenticated, async (req, res) => {
+    // ----> LINHA DE DIAGNÓSTICO 1 <----
+    console.log('SESSÃO DENTRO DA API /POST TAREFAS:', req.session); 
+
     try {
         const { titulo, descricao, prioridade } = req.body;
         const newTask = new Task({
             titulo,
             descricao,
             prioridade,
-            user: req.session.userId // <-- VINCULA A NOVA TAREFA AO USUÁRIO LOGADO
+            user: req.session.userId 
         });
         await newTask.save();
+        await newTask.populate('user', 'nome'); 
+
         res.status(201).json({ success: true, data: newTask });
     } catch (error) {
+        // ----> LINHA DE DIAGNÓSTICO 2 <----
+        console.error('💥 ERRO AO SALVAR TAREFA:', error.message); 
+
         res.status(400).json({ success: false, message: error.message });
     }
 });
@@ -80,11 +89,20 @@ router.post('/tarefas', isAuthenticated, async (req, res) => {
  */
 router.put('/tarefas/:id', isAuthenticated, async (req, res) => {
     try {
-        const task = await Task.findOne({ _id: req.params.id, user: req.session.userId });
+        const task = await Task.findById(req.params.id);
+
         if (!task) {
-            return res.status(404).json({ success: false, message: 'Tarefa não encontrada ou não pertence a você.' });
+            return res.status(404).json({ success: false, message: 'Tarefa não encontrada.' });
         }
-        // Atualiza apenas os campos enviados no corpo da requisição
+
+        // VERIFICAÇÃO DE PERMISSÃO
+        const userIsAdmin = req.session.userRole === 'admin';
+        const userIsOwner = task.user.toString() === req.session.userId;
+
+        if (!userIsAdmin && !userIsOwner) {
+            return res.status(403).json({ success: false, message: 'Acesso negado. Você não tem permissão para editar esta tarefa.' });
+        }
+
         Object.assign(task, req.body);
         await task.save();
         res.json({ success: true, data: task });
@@ -101,10 +119,21 @@ router.put('/tarefas/:id', isAuthenticated, async (req, res) => {
  */
 router.delete('/tarefas/:id', isAuthenticated, async (req, res) => {
     try {
-        const task = await Task.findOneAndDelete({ _id: req.params.id, user: req.session.userId });
+        const task = await Task.findById(req.params.id);
+
         if (!task) {
-            return res.status(404).json({ success: false, message: 'Tarefa não encontrada ou não pertence a você.' });
+            return res.status(404).json({ success: false, message: 'Tarefa não encontrada.' });
         }
+
+        // VERIFICAÇÃO DE PERMISSÃO
+        const userIsAdmin = req.session.userRole === 'admin';
+        const userIsOwner = task.user.toString() === req.session.userId;
+
+        if (!userIsAdmin && !userIsOwner) {
+            return res.status(403).json({ success: false, message: 'Acesso negado. Você não tem permissão para excluir esta tarefa.' });
+        }
+        
+        await Task.deleteOne({ _id: req.params.id });
         res.json({ success: true, message: 'Tarefa excluída com sucesso.' });
     } catch(error) {
         res.status(500).json({ success: false, message: error.message });

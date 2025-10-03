@@ -132,10 +132,9 @@ body::before {
     overflow: hidden;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    /* --- CORREÇÃO ADICIONADA --- */
-    display: inline-flex; /* Garante que a área clicável se ajuste ao conteúdo */
-    align-items: center; /* Alinha o ícone e o texto verticalmente */
-    gap: 0.5em; /* Adiciona um espaço entre o ícone e o texto */
+    display: inline-flex; 
+    align-items: center; 
+    gap: 0.5em; 
 }
 
 .nav a:hover {
@@ -430,8 +429,6 @@ body::before {
 }
 
 .delete-btn:hover { color: var(--priority-alta); }
-
-/* =================== CÓDIGO PARA SUBSTITUIR =================== */
 
 .modal {
     display: none;
@@ -889,9 +886,15 @@ body::before {
 }
 
 .auth-switch a {
-    color: #a78bfa;
+    color: var(--text-primary); /* COR ALTERADA PARA BRANCO */
     font-weight: bold;
     text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline; /* Adiciona sublinhado ao passar o mouse */
+    opacity: 0.8;
 }
 
 /* Alertas de erro/sucesso */
@@ -963,4 +966,17 @@ body::before {
 
 .logout-btn-mobile:hover {
     background: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================================================ */
+/* 💅 ESTILOS PARA O NOME DO AUTOR E BOTÃO DE LIXEIRA DESABILITADO */
+/* ============================================================================ */
+
+.task-author {
+    display: block;
+    margin-top: 4px;
+}
+.delete-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
 }

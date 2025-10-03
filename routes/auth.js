@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user'); // Importa o modelo de usuário que criamos
+const { isGuest } = require('../middleware/authMiddleware');
 
 // ============================================================================
 //  ROTA DE CADASTRO (GET E POST)
 // ============================================================================
 
 // Rota para MOSTRAR o formulário de cadastro
-router.get('/cadastro', (req, res) => {
+router.get('/cadastro', isGuest, (req, res) => {
     res.render('cadastro', {
         title: 'Cadastro de Usuário',
         description: 'Crie sua conta para acessar o sistema.',
@@ -58,7 +59,7 @@ router.post('/cadastro', async (req, res) => {
 // ============================================================================
 
 // Rota para MOSTRAR o formulário de login
-router.get('/login', (req, res) => {
+router.get('/login', isGuest, (req, res) => { 
     res.render('login', {
         title: 'Login',
         description: 'Acesse sua conta.',
@@ -85,6 +86,7 @@ router.post('/login', async (req, res) => {
         // Se tudo estiver correto, armazena as informações do usuário na SESSÃO
         req.session.userId = user._id;
         req.session.userRole = user.role;
+        req.session.userName = user.nome;
 
         // Redireciona o usuário para a página de tarefas
         res.redirect('/tarefas');

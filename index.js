@@ -21,9 +21,8 @@
  */
 
 // ============================================================================
-// 📦 IMPORTAÇÕES DE MÓDULOS
+// 📦 IMPORTAÇÕES DE MÓDulos
 // ============================================================================
-
 
 require('dotenv').config();
 
@@ -42,7 +41,8 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 
 // Módulos internos (nossa aplicação)
-const { connectToDatabase, getConnectionStatus, testConnection } = require('./config/database');
+const { connectToDatabase, getConnectionStatus } = require('./config/database');
+const { addUserToLocals } = require('./middleware/authMiddleware');
 const pagesRoutes = require('./routes/pages');
 const apiRoutes = require('./routes/api');
 const authRoutes = require('./routes/auth');
@@ -51,31 +51,26 @@ const authRoutes = require('./routes/auth');
 // ⚙️ CONFIGURAÇÕES E CONSTANTES
 // ============================================================================
 
-// Configurações do servidor
 const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const APP_NAME = 'Aplicativo Híbrido';
 const APP_VERSION = '1.0.0';
 
-// Criação da instância do Express
 const app = express();
 
 // ============================================================================
 // 🎨 CONFIGURAÇÃO DO TEMPLATE ENGINE
 // ============================================================================
 
-// Configuração do EJS como template engine
 app.use(expressLayouts);
 app.set('layout', 'layout');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Variáveis globais para templates
 app.locals.appName = APP_NAME;
 app.locals.appVersion = APP_VERSION;
 app.locals.nodeEnv = NODE_ENV;
 
-// Configuração data e hora
 app.locals.formatDate = (date) => {
     if (!date) return '';
     return format(new Date(date), 'dd/MM/yyyy HH:mm');
@@ -85,7 +80,6 @@ app.locals.formatDate = (date) => {
 // 🔧 MIDDLEWARE DE CONFIGURAÇÃO
 // ============================================================================
 
-// Middleware de CORS (Cross-Origin Resource Sharing)
 app.use(cors({
     origin: NODE_ENV === 'production' ? false : true,
     credentials: true,
@@ -93,53 +87,41 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-// Middleware para parsing de JSON
-app.use(express.json({
-    limit: '10mb',
-    strict: true
-}));
-
-// Middleware para parsing de dados de formulário
-app.use(express.urlencoded({
-    extended: true,
-    limit: '10mb'
-}));
-
-// Middleware para arquivos estáticos
+app.use(express.json({ limit: '10mb', strict: true }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public'), {
     maxAge: NODE_ENV === 'production' ? '1d' : 0,
     etag: true
 }));
 
-// Middleware para senha
 app.use(session({
-    secret: process.env.SESSION_SECRET, // <-- ALTERE ESTA LINHA
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false, 
-    store: MongoStore.create({ 
+    saveUninitialized: false,
+    store: MongoStore.create({
         mongoUrl: process.env.MONGODB_URI,
-        collectionName: 'sessions' 
+        collectionName: 'sessions'
     }),
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24 // Duração do cookie da sessão (aqui, 1 dia)
+        maxAge: 1000 * 60 * 60 * 24
     }
 }));
+
+// Middleware global que passa informações do usuário para todas as views
+app.use(addUserToLocals);
 
 // ============================================================================
 // 📊 MIDDLEWARE DE LOGGING E MONITORAMENTO
 // ============================================================================
 
-// Middleware personalizado para logging de requisições
 app.use((req, res, next) => {
     const start = Date.now();
     const timestamp = new Date().toISOString();
 
-    // Log da requisição
     console.log(`\n🌐 [${timestamp}] ${req.method} ${req.originalUrl}`);
     console.log(`📱 User-Agent: ${req.get('User-Agent') || 'N/A'}`);
     console.log(`🌍 IP: ${req.ip || req.connection.remoteAddress}`);
 
-    // Intercepta o res.end para logar a resposta
     const originalEnd = res.end;
     res.end = function (chunk, encoding) {
         const duration = Date.now() - start;
@@ -158,7 +140,7 @@ app.use((req, res, next) => {
 // 🛣️ CONFIGURAÇÃO DAS ROTAS
 // ============================================================================
 
-// Middleware para adicionar informações de rota
+// Middleware para adicionar informações de rota (ex: para destacar link ativo no menu)
 app.use((req, res, next) => {
     res.locals.currentPath = req.path;
     res.locals.currentMethod = req.method;
@@ -178,13 +160,9 @@ app.get('/health', (req, res) => {
     });
 });
 
-// Configuração das rotas de páginas (interface web)
+// Configuração das rotas
 app.use('/', pagesRoutes);
-
-// Configuração das rotas de API (endpoints REST)
 app.use('/api', apiRoutes);
-
-// Configuração das rotas de autenticação de usuário
 app.use('/', authRoutes);
 
 // ============================================================================
