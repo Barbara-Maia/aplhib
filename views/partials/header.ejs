@@ -1,5 +1,5 @@
 <style>
-    /* Estilos específicos para o header e nav, movidos para cá para organização */
+    /* ... (a maior parte dos seus estilos .header, .nav, etc. permanece a mesma) ... */
     .header {
         background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
         padding: 60px 40px;
@@ -18,17 +18,34 @@
         0% { transform: translateX(-100%); }
         100% { transform: translateX(100%); }
     }
+
+    /* O H1 PAI: Sem estilos de cor */
     .header h1 {
         font-size: clamp(2.5rem, 5vw, 4rem);
         font-weight: 800;
         margin-bottom: 16px;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        position: relative; z-index: 1;
+    }
+
+    /* O SPAN DO TEXTO: Aplica o gradiente */
+    .header-title-text {
+        color: #e0e7ff; /* Cor de fallback */
         background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        position: relative; z-index: 1;
     }
+
+    /* NOVO: O SPAN DO EMOJI */
+    .header-emoji {
+        /* Remove quaisquer estilos de fundo/cor herdados */
+        background: none;
+        color: initial; /* Reseta a cor para o padrão do navegador */
+        -webkit-background-clip: initial; /* Reseta o 'clip' */
+        -webkit-text-fill-color: initial;  /* Reseta o 'fill' */
+    }
+    
     .header p {
         font-size: 1.3rem;
         font-weight: 400;
@@ -92,21 +109,25 @@
     <button class="menu-toggle" id="menu-toggle">
         <i class="fas fa-bars"></i>
     </button>
-    <h1>🚀 Aplicativo Híbrido</h1>
+    
+    <h1><span class="header-emoji">🚀</span> <span class="header-title-text">Aplicativo Híbrido</span></h1>
+    
     <p><%= description %></p>
 </div>
-
-<!--------------- Navegação Desktop ----------------->
 
 <nav class="nav" id="desktop-nav">
     <ul>
         <li><a href="/"><i class="fas fa-home fa-fw"></i> Início</a></li>
         <li><a href="/sobre"><i class="fas fa-info-circle fa-fw"></i> Sobre</a></li>
-        <li><a href="/tarefas"><i class="fas fa-tasks fa-fw"></i> Tarefas</a></li>
         <li><a href="/contato"><i class="fas fa-envelope fa-fw"></i> Contato</a></li>
         <li><a href="/api/status" target="_blank"><i class="fas fa-chart-line fa-fw"></i> API Status</a></li>
         
         <% if (locals.userIsLoggedIn) { %>
+            <li><a href="/tarefas"><i class="fas fa-tasks fa-fw"></i> Tarefas</a></li>
+            <li><a href="/tcc"><i class="fas fa-graduation-cap fa-fw"></i> Meu TCC</a></li>
+            <li><a href="/trabalho"><i class="fas fa-briefcase fa-fw"></i> Trabalho</a></li>
+            <li><a href="/carro"><i class="fas fa-car fa-fw"></i> Carro</a></li>
+            
             <li>
                 <form action="/logout" method="POST" style="display: inline;">
                     <button type="submit" class="logout-btn">
@@ -120,18 +141,20 @@
     </ul>
 </nav>
 
-<!--------------- Navegação Mobile ----------------->
-
 <div class="mobile-nav" id="mobile-nav">
     <button class="close-menu" id="close-menu">&times;</button>
     <ul>
         <li><a href="/"><i class="fas fa-home fa-fw"></i> Início</a></li>
         <li><a href="/sobre"><i class="fas fa-info-circle fa-fw"></i> Sobre</a></li>
-        <li><a href="/tarefas"><i class="fas fa-tasks fa-fw"></i> Tarefas</a></li>
         <li><a href="/contato"><i class="fas fa-envelope fa-fw"></i> Contato</a></li>
         <li><a href="/api/status" target="_blank"><i class="fas fa-chart-line fa-fw"></i> API Status</a></li>
         
         <% if (locals.userIsLoggedIn) { %>
+            <li><a href="/tarefas"><i class="fas fa-tasks fa-fw"></i> Tarefas</a></li>
+            <li><a href="/tcc"><i class="fas fa-graduation-cap fa-fw"></i> Meu TCC</a></li>
+            <li><a href="/trabalho"><i class="fas fa-briefcase fa-fw"></i> Trabalho</a></li>
+            <li><a href="/carro"><i class="fas fa-car fa-fw"></i> Carro</a></li>
+
             <li>
                 <form action="/logout" method="POST" style="display: block; width: 100%;">
                     <button type="submit" class="logout-btn-mobile">

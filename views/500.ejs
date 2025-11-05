@@ -1,15 +1,21 @@
 <div class="card" style="text-align: center; background-color: rgba(239, 68, 68, 0.1);">
     <h2 style="font-size: 4rem; margin: 0;">💥</h2>
     <h2>Erro Interno do Servidor (500)</h2>
+    
     <p><%= description %></p>
+    
     <hr style="border-color: rgba(255,255,255,0.2); margin: 20px 0;">
+    
     <p style="font-size: 0.9rem; opacity: 0.7;">
         Se o problema persistir, por favor, contate o suporte.
-        <br>
-        <strong>ID do Erro:</strong> <%= errorId %>
+        
+        <% if (locals.errorId) { %>
+            <br>
+            <strong>ID do Erro:</strong> <%= errorId %>
+        <% } %>
     </p>
 
-    <% if (errorMessage) { %>
+    <% if (locals.errorMessage) { %>
         <div style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 15px; margin-top: 20px; text-align: left; font-family: monospace; font-size: 0.8rem; max-height: 200px; overflow-y: auto;">
             <p><strong>Detalhes do Erro (Ambiente de Desenvolvimento):</strong></p>
             <pre><%= errorMessage %></pre>

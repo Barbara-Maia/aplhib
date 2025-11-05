@@ -31,6 +31,14 @@ const taskSchema = new mongoose.Schema({
         enum: ['Baixa', 'Média', 'Alta'],
         default: 'Média'
     },
+    // Novo campo para categorizar o item
+    category: {
+        type: String,
+        required: [true, 'A categoria é obrigatória.'],
+        // MODIFICADO: 'Compras' agora é 'Carro'
+        enum: ['Tarefa', 'Meu TCC', 'Trabalho', 'Carro'],
+        default: 'Tarefa'
+    },
     // O campo 'user' precisa estar aqui dentro
     user: {
         type: mongoose.Schema.Types.ObjectId,

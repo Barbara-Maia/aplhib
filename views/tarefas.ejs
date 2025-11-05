@@ -1,61 +1,62 @@
 <div class="task-container">
     <div class="task-header">
-        <h2>🗓️ Minhas Tarefas</h2>
+        <h2>🗓️ <%= title %></h2>
         <div class="task-counter-container">
             <span class="counter-item">✅ Concluídas: <strong id="completed-count">0</strong></span>
             <span class="counter-item">🕒 Pendentes: <strong id="pending-count">0</strong></span>
             <span class="counter-item">📦 Total: <strong id="total-count">0</strong></span>
         </div>
     </div>
-
     <div class="user-greeting">
         <% if (locals.currentUserName) { %>
             <p>Logado como: <strong><%= currentUserName %></strong></p>
         <% } %>
     </div>
-
     <div class="task-container-header">
-        <button id="add-task-modal-btn" class="add-task-btn">＋ Adicionar Nova Tarefa</button>
+        <button id="add-task-modal-btn" class="add-task-btn">＋ Adicionar Novo Item</button>
         <a href="/dashboard" class="dashboard-btn">📊 Ver Dashboard</a>
     </div>
-
     <ul id="task-list" class="task-list">
         <% if (tasks && tasks.length > 0) { %>
             <% tasks.forEach(task => { %>
                 <% const prioridade = task.prioridade || 'Média'; %>
                 <% const prioridadeClass = prioridade.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); %>
                 <li class="task-card <%= task.concluida ? 'completed' : '' %>" data-id="<%= task._id %>">
-                    <h3 class="task-title"><%= task.titulo %></h3>
-                    <p class="task-description">
-                        <%- task.descricao ? task.descricao.replace(/\n/g, '<br>') : '' %>
-                        <br>
-                        <small class="task-creation-date">
-                            <em>Criada em: <%= formatDate(task.createdAt) %></em>
-
-                            <% if (task.user && task.user.nome) { %>
-                                <span class="task-author">
-                                    <em>por: <%= task.user.nome %></em>
-                                </span>
-                            <% } %>
-                        </small>
-                    </p>
-                    </li>
-                            <% }) %>
+                    <input type="checkbox" class="task-checkbox" <%= task.concluida ? 'checked' : '' %>>
+                    <div class="task-content">
+                        <h3 class="task-title"><%= task.titulo %></h3>
+                        <p class="task-description">
+                            <%- task.descricao ? task.descricao.replace(/\n/g, '<br>') : '' %>
+                            <br>
+                            <small class="task-creation-date">
+                                <em>Criada em: <%= formatDate(task.createdAt) %></em>
+                                <% if (task.user && task.user.nome) { %>
+                                    <span class="task-author">
+                                        <em>por: <%= task.user.nome %></em>
+                                    </span>
+                                <% } %>
+                            </small>
+                        </p>
+                    </div>
+                    <div class="task-meta">
+                        <span class="priority-tag priority-<%= prioridadeClass %>"><%= prioridade %></span>
+                        <% if (locals.currentUserRole === 'admin' || (task.user && task.user._id.toString() === locals.currentUserId.toString())) { %>
+                            <button class="delete-btn" title="Excluir tarefa">🗑️</button>
+                        <% } else { %>
+                            <button class="delete-btn" disabled title="Você não tem permissão para excluir esta tarefa">🗑️</button>
                         <% } %>
-                    </ul>
+                    </div>
+                </li>
+            <% }) %>
+        <% } %>
+    </ul>
 
-                    <% if (!tasks || tasks.length === 0) { %>
-                        <p id="empty-message">🎉 Nenhuma tarefa na lista. Adicione uma para começar!</p>
-                    <% } %>
-                </div>
-
-<%# Define o bloco de conteúdo para os modais %>
 <%- contentFor('modals') %>
 
 <div id="add-task-modal" class="modal">
     <div class="modal-content">
         <span id="close-modal-btn" class="close-btn">&times;</span>
-        <h3>Criar Nova Tarefa</h3>
+        <h3>Criar Novo Item</h3>
         <form id="task-form">
             <div class="form-group">
                 <label for="titulo">Título</label>
@@ -65,6 +66,17 @@
                 <label for="descricao">Descrição</label>
                 <textarea id="descricao" name="descricao"></textarea>
             </div>
+
+            <div class="form-group">
+                <label for="category">Categoria</label>
+                <select id="category" name="category">
+                    <option value="Tarefa" selected>Tarefa</option>
+                    <option value="Meu TCC">Meu TCC</option>
+                    <option value="Trabalho">Trabalho</option>
+                    <option value="Carro">Carro</option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="prioridade">Prioridade</label>
                 <select id="prioridade" name="prioridade">
@@ -73,15 +85,14 @@
                     <option value="Alta">Alta</option>
                 </select>
             </div>
-            <button type="submit">Salvar Tarefa</button>
+            <button type="submit">Salvar Item</button>
         </form>
     </div>
 </div>
-
 <div id="confirm-delete-modal" class="modal">
     <div class="modal-content">
         <h3>Confirmar Exclusão</h3>
-        <p>Você tem certeza que deseja excluir esta tarefa?</p>
+        <p>Você tem certeza que deseja excluir este item?</p>
         <div class="modal-buttons">
             <button id="cancel-delete-btn">Cancelar</button>
             <button id="confirm-delete-btn" class="btn-confirm-delete">Excluir</button>
@@ -89,8 +100,10 @@
     </div>
 </div>
 
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // ... (várias funções do script permanecem iguais: taskList, modals, formatDate, etc...)
     const taskList = document.getElementById('task-list');
     const addTaskModal = document.getElementById('add-task-modal');
     const openModalBtn = document.getElementById('add-task-modal-btn');
@@ -135,8 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         li.className = `task-card ${task.concluida ? 'completed' : ''}`;
         li.dataset.id = task._id;
         
-        // 1. VERIFICA SE O NOME DO AUTOR EXISTE
-        let authorHtml = '';
+            let authorHtml = '';
         if (task.user && task.user.nome) {
             authorHtml = `
                 <span class="task-author">
@@ -145,14 +157,15 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }
 
-        // 2. Lógica de permissão para o botão (você já tinha esta parte)
         const currentUserRole = '<%= locals.currentUserRole %>';
         const currentUserId = '<%= locals.currentUserId %>';
         let deleteButtonHtml = `<button class="delete-btn" disabled title="Você não tem permissão">🗑️</button>`;
+        
+        
         if (currentUserRole === 'admin' || (task.user && task.user._id.toString() === currentUserId)) {
             deleteButtonHtml = `<button class="delete-btn" title="Excluir tarefa">🗑️</button>`;
         }
-        
+            
         li.innerHTML = `
             <input type="checkbox" class="task-checkbox" ${task.concluida ? 'checked' : ''}>
             <div class="task-content">
@@ -162,18 +175,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     <br>
                     <small class="task-creation-date">
                         <em>Criada em: ${formatDate(task.createdAt)}</em>
-                        ${authorHtml} </small>
+                        ${authorHtml}
+                    </small>
                 </p>
             </div>
             <div class="task-meta">
                 <span class="priority-tag priority-${prioridadeClass}">${prioridade}</span>
-                ${deleteButtonHtml} </div>
+                ${deleteButtonHtml}
+            </div>
         `;
 
         const taskList = document.getElementById('task-list');
         taskList.prepend(li);
         updateTaskCounter();
     };
+
     if (openModalBtn) openModalBtn.onclick = () => { if (addTaskModal) addTaskModal.style.display = 'block'; };
     if (closeModalBtn) closeModalBtn.onclick = () => { if (addTaskModal) addTaskModal.style.display = 'none'; };
     if (cancelDeleteBtn) cancelDeleteBtn.onclick = () => {
@@ -187,16 +203,20 @@ document.addEventListener('DOMContentLoaded', () => {
             taskToDeleteId = null;
         }
     };
+
     if (taskForm) {
         taskForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const titulo = e.target.titulo.value.trim();
             if (!titulo) return;
+            
             const taskData = {
                 titulo,
                 descricao: e.target.descricao.value.trim(),
-                prioridade: e.target.prioridade.value
+                prioridade: e.target.prioridade.value,
+                category: e.target.category.value
             };
+            
             try {
                 const res = await fetch('/api/tarefas', {
                     method: 'POST',
@@ -205,15 +225,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const result = await res.json();
                 if (!result.success) throw new Error(result.message);
-                renderTask(result.data);
+
+                const newCategory = result.data.category;
+                const currentPath = window.location.pathname;
+
+                if (
+                    (currentPath === '/tarefas' && newCategory === 'Tarefa') ||
+                    (currentPath === '/tcc' && newCategory === 'Meu TCC') ||
+                    (currentPath === '/trabalho' && newCategory === 'Trabalho') ||
+                    // MODIFICADO
+                    (currentPath === '/carro' && newCategory === 'Carro')
+                ) {
+                    renderTask(result.data);
+                }
+
                 taskForm.reset();
                 if (addTaskModal) addTaskModal.style.display = 'none';
                 updateTaskCounter();
             } catch (error) {
-                console.error('Falha ao adicionar tarefa:', error);
+                console.error('Falha ao adicionar item:', error);
             }
         });
     }
+    
+    // ... (o resto do script: taskList click, delete logic, etc. permanece igual) ...
     if (taskList) {
         taskList.addEventListener('click', async (e) => {
             const card = e.target.closest('.task-card');
@@ -232,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     card.classList.toggle('completed', isCompleted);
                     updateTaskCounter();
                 } catch (error) {
-                    console.error('Falha ao atualizar tarefa:', error);
+                    console.error('Falha ao atualizar item:', error);
                     e.target.checked = !isCompleted;
                 }
             } else if (e.target.closest('.delete-btn')) {
@@ -260,12 +295,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         card.remove();
                         updateTaskCounter();
                         if (document.querySelectorAll('.task-card').length === 0) {
-                            taskList.insertAdjacentHTML('afterend', '<p id="empty-message">🎉 Nenhuma tarefa na lista. Adicione uma para começar!</p>');
+                            taskList.insertAdjacentHTML('afterend', '<p id="empty-message">🎉 Nenhum item na lista. Adicione um para começar!</p>');
                         }
                     }, 500);
                 }
             } catch (error) {
-                console.error('Falha ao excluir tarefa:', error);
+                console.error('Falha ao excluir item:', error);
             } finally {
                 if (confirmDeleteModal) confirmDeleteModal.style.display = 'none';
                 taskToDeleteId = null;

@@ -62,13 +62,17 @@ router.post('/tarefas', isAuthenticated, async (req, res) => {
     console.log('SESSÃO DENTRO DA API /POST TAREFAS:', req.session); 
 
     try {
-        const { titulo, descricao, prioridade } = req.body;
+        // MODIFICADO: Adicionado 'category' à desestruturação
+        const { titulo, descricao, prioridade, category } = req.body;
+        
         const newTask = new Task({
             titulo,
             descricao,
             prioridade,
+            category, // MODIFICADO: 'category' é salvo no banco
             user: req.session.userId 
         });
+        
         await newTask.save();
         await newTask.populate('user', 'nome'); 
 
@@ -103,7 +107,8 @@ router.put('/tarefas/:id', isAuthenticated, async (req, res) => {
             return res.status(403).json({ success: false, message: 'Acesso negado. Você não tem permissão para editar esta tarefa.' });
         }
 
-        Object.assign(task, req.body);
+        // Esta linha já lida com o 'category' se ele vier no req.body
+        Object.assign(task, req.body); 
         await task.save();
         res.json({ success: true, data: task });
     } catch(error) {
@@ -139,26 +144,5 @@ router.delete('/tarefas/:id', isAuthenticated, async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 });
-
-
-// --- ROTAS DE EXEMPLO (PRODUTOS) ---
-
-const produtos = [
-    { id: 1, nome: 'Produto A', preco: 99.90, estoque: 10 },
-    { id: 2, nome: 'Produto B', preco: 149.90, estoque: 5 },
-    { id: 3, nome: 'Produto C', preco: 199.90, estoque: 0 },
-];
-router.get('/produtos', (req, res) => {
-    res.json({ success: true, data: produtos });
-});
-router.get('/produtos/:id', (req, res) => {
-    const produto = produtos.find(p => p.id == req.params.id);
-    if (produto) {
-        res.json({ success: true, data: produto });
-    } else {
-        res.status(404).json({ success: false, message: 'Produto não encontrado' });
-    }
-});
-
 
 module.exports = router;

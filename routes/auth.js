@@ -27,6 +27,8 @@ router.post('/cadastro', async (req, res) => {
             // Se o usuário já existe, retorna para a página de cadastro com um erro
             return res.render('cadastro', {
                 title: 'Cadastro de Usuário',
+                // MODIFICADO: Adicionado 'description'
+                description: 'Crie sua conta para acessar o sistema.',
                 error: 'Este e-mail já está cadastrado.',
                 nome, telefone, email // Devolve os dados para preencher o formulário novamente
             });
@@ -49,6 +51,8 @@ router.post('/cadastro', async (req, res) => {
         // Se houver outro erro (ex: validação do modelo)
         res.render('cadastro', {
             title: 'Cadastro de Usuário',
+            // MODIFICADO: Adicionado 'description'
+            description: 'Crie sua conta para acessar o sistema.',
             error: error.message || 'Ocorreu um erro ao tentar criar a conta.'
         });
     }
@@ -79,6 +83,8 @@ router.post('/login', async (req, res) => {
         if (!user || !(await user.matchPassword(password))) {
             return res.render('login', {
                 title: 'Login',
+                // MODIFICADO: Adicionado 'description'
+                description: 'Acesse sua conta.', 
                 error: 'E-mail ou senha inválidos.'
             });
         }
@@ -92,8 +98,12 @@ router.post('/login', async (req, res) => {
         res.redirect('/tarefas');
 
     } catch (error) {
+        // MODIFICADO: Adicionado console.error para depuração
+        console.error("Erro durante o POST /login:", error);
         res.render('login', {
             title: 'Login',
+            // MODIFICADO: Adicionado 'description'
+            description: 'Acesse sua conta.',
             error: 'Ocorreu um erro ao tentar fazer login.'
         });
     }
