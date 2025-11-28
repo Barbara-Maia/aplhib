@@ -284,81 +284,80 @@ body::before {
 }
 
 /* ============================================================================ */
-/* 📋 ESTILOS DA PÁGINA DE TAREFAS (tarefas.ejs) */
+/* 📋 ESTILOS DO HEADER DE TAREFAS (BOTÕES PEQUENOS) */
 /* ============================================================================ */
 
-/* Header com botões de ação */
+/* Header com botões de ação - Grid Flexível */
 .task-container-header {
     display: flex;
-    gap: 1rem;
+    flex-wrap: wrap; 
+    gap: 10px;       
     margin-bottom: 1.5rem;
 }
 
-.task-container {
-    max-width: 800px;
-    margin: 0 auto;
-    background-color: var(--container-color);
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-.task-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap; 
-    gap: 1rem;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
-}
-
-.task-header h2 {
-    margin: 0;
-    font-size: 1.8rem;
-    color: var(--text-color);
-}
-
-.task-counter-container {
-    display: flex;
-    gap: 1rem;
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-.add-task-btn, .dashboard-btn {
-    display: block;
-    flex-grow: 1; /* Faz os botões dividirem o espaço */
-    padding: 1rem;
-    font-size: 1rem;
-    font-weight: bold;
+/* Estilo Base para TODOS os botões do cabeçalho */
+.header-btn {
+    flex: 1;             
+    min-width: 90px;     
+    padding: 0.7rem 0.5rem; 
+    font-size: 0.9rem;   
+    font-weight: 600;
     color: var(--text-color);
     text-align: center;
     text-decoration: none;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px; 
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-.add-task-btn {
+.header-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+/* Cores Específicas */
+
+/* Botão Adicionar (Roxo Destaque) */
+.btn-add {
     background-color: var(--card-hover-color);
+    flex-grow: 2; /* Deixa o botão adicionar levemente maior que os outros */
 }
-.add-task-btn:hover {
-    background-color: #9932CC;
+.btn-add:hover { background-color: #9932CC; }
+
+/* Botão Dashboard (Indigo) */
+.btn-dash {
+    background-color: #5a67d8;
+}
+.btn-dash:hover { background-color: #4c51bf; }
+
+/* Botões de Ferramentas (CSV, JSON, Backup - Translúcidos) */
+.btn-tool {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+.btn-tool:hover {
+    background: rgba(255, 255, 255, 0.25);
 }
 
-.dashboard-btn {
-    background-color: #5a67d8; /* Um tom de índigo */
+/* Mobile: Ajustes para telas pequenas */
+@media (max-width: 600px) {
+    .task-container-header {
+        justify-content: center;
+    }
+    .header-btn {
+        min-width: 45%; /* Em celular, ficam 2 por linha */
+        font-size: 0.85rem;
+    }
 }
-.dashboard-btn:hover {
-    background-color: #4c51bf;
-}
-
+/* ============================================================================ */
+/* 📝 ESTILOS DA LISTA DE TAREFAS  */
 
 .task-list {
     list-style: none;
